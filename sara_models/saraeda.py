@@ -17,29 +17,55 @@ df.describe()
 df.info()
 df.acct_type.unique()
 
- fraud = df.loc[df['acct_type'] == fraudster]
- #Fraud types: fraudster_event, premium, spammer_warn, fraudster, spammer_limited, fraudster_att, spammer_web, spammer
+fraudsters = ['fraudster_event','fraudster','fraudster_att']
+nuisances=['spammer_limited','spammer_warn','tos_warn','spammer_noinvite','tos_lock','locked','spammer_web','spammer']
 
-#Currency type: USD,EUR,CAD,GBP,AUD,NZD,MXN
+fraud_event = df.loc[df['acct_type'] == 'fraudster_event']
+fraud = df.loc[df['acct_type'] == 'fraudster']
+fraud_att = df.loc[df['acct_type'] == 'fraudster_att']
 
+fraudstersdf = df.loc[df['acct_type'].isin(fraudsters)]
+
+ #Fraud types:
+premium             12373
+fraudster_event       851
+fraudster             437
+spammer_limited       218
+spammer_warn          144
+tos_warn               91
+spammer_noinvite       84
+tos_lock               77
+locked                 54
+fraudster_att           5
+spammer_web             2
+spammer                 1
+
+#Currency type:
+USD    9696
+GBP    2222
+CAD    1322
+AUD     779
+EUR     262
+NZD      55
+MXN       1
 
 acct_type             14337 non-null object
 approx_payout_date    14337 non-null int64
 body_length           14337 non-null int64
 channels              14337 non-null int64
-country               14256 non-null object
+*country               14256 non-null object
 currency              14337 non-null object
-delivery_method       14321 non-null float64
+*delivery_method       14321 non-null float64
 description           14337 non-null object
 email_domain          14337 non-null object
 event_created         14337 non-null int64
 event_end             14337 non-null int64
-event_published       14238 non-null float64
+*event_published       14238 non-null float64
 event_start           14337 non-null int64
 fb_published          14337 non-null int64
 gts                   14337 non-null float64
 has_analytics         14337 non-null int64
-has_header            8928 non-null float64
+*has_header            8928 non-null float64
 has_logo              14337 non-null int64
 listed                14337 non-null object
 name                  14337 non-null object
@@ -48,13 +74,13 @@ num_order             14337 non-null int64
 num_payouts           14337 non-null int64
 object_id             14337 non-null int64
 org_desc              14337 non-null object
-org_facebook          14278 non-null float64
+*org_facebook          14278 non-null float64
 org_name              14337 non-null object
-org_twitter           14278 non-null float64
+*org_twitter           14278 non-null float64
 payee_name            14337 non-null object
 payout_type           14337 non-null object
 previous_payouts      14337 non-null object
-sale_duration         14182 non-null float64
+*sale_duration         14182 non-null float64
 sale_duration2        14337 non-null int64
 show_map              14337 non-null int64
 ticket_types          14337 non-null object
@@ -62,8 +88,8 @@ user_age              14337 non-null int64
 user_created          14337 non-null int64
 user_type             14337 non-null int64
 venue_address         14337 non-null object
-venue_country         13261 non-null object
-venue_latitude        13261 non-null float64
-venue_longitude       13261 non-null float64
-venue_name            13261 non-null object
-venue_state           13261 non-null object
+*venue_country         13261 non-null object
+*venue_latitude        13261 non-null float64
+*venue_longitude       13261 non-null float64
+*venue_name            13261 non-null object
+*venue_state           13261 non-null object
