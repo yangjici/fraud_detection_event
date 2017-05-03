@@ -30,9 +30,9 @@ def run_model_cv(n_splits=5):
 
     for train_index, test_index in kfolds.split(X_nums):
 
-        model.fit(X_nums[train_index], y[train_index])
-        y_predict = model.predict(X[test_index])
-        y_true = y[test_index]
+        model.fit(X_nums.values[train_index], y.values[train_index])
+        y_predict = model.predict(X_nums.values[test_index])
+        y_true = y.values[test_index]
 
         accuracies.append(accuracy_score(y_true, y_predict))
         precisions.append(precision_score(y_true, y_predict))
