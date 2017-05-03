@@ -1,8 +1,7 @@
 import utils as u
 import pandas as pd
 import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split, KFold
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.model_selection import GridSearchCV
@@ -22,17 +21,16 @@ def run_model():
     return accuracy, precision, recall
 
 # Cross Validate linear regression
-def run_model_cv(model, X_train, X_test, y_train, y_test):
+def run_model_cv(n_splits=5):
 
-    kfold = KFold(n_splits=5)
-
+    kfolds = KFold(n_splits)
     accuracies = []
     precisions = []
     recalls = []
 
-    for train_index, test_index in kfold:
+    for train_index, test_index in kfolds.split(X_nums):
 
-        model.fit(X[train_index], y[train_index])
+        model.fit(X_nums[train_index], y[train_index])
         y_predict = model.predict(X[test_index])
         y_true = y[test_index]
 
