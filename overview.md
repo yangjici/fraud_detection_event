@@ -5,8 +5,10 @@
 
 After some initial time in EDA, we split evenly model development amongst the team.  
 This included identifying relationships between columns and hunches regarding potential relevancy.
-Each took a stab at building a model, each a different one - the RandomForrestClassifier being the clear winner.  
+Each team member took a stab at building a model, each a different one - the RandomForrestClassifier being the clear winner.  
 Then came architecting to put the model in a pipeline, adding the flask front end with javascript, and a mondgo db.
+
+The web app had to deal with two separate thread - one to run the web server and one to ping for new data points.  Rather than create a threading system, we opted to run each in its own python environment and sidetepped this.  
 
 ## preprocessing
 
