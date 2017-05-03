@@ -9,4 +9,5 @@ class Model(object):
         return r.fit(X, y)
 
     def predict(self, X):
-        pass
+        r = RandomForestClassifier()
+        return r.predict(X,y)
