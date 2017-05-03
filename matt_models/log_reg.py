@@ -5,10 +5,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import KFold
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
+from sklearn.model_selection import GridSearchCV
+import matplotlib.pyplot as plt
 
 
 model = LogisticRegression()
-
 
 def init():
     try:
@@ -67,3 +68,66 @@ def run_ticket_types(in_df):
 
     a, p, r = run_model(model, X_train, X_test, y_train, y_test)
     print a, p, r
+
+
+def do_GridSearch(X_train,y_train):
+    Cs = np.logspace(-4, 4, 30)
+    params = {'C': Cs}
+    gs_model = GridSearchCV(model,params,n_jobs=-1)
+    gs_model.fit(X_train,y_train)
+
+
+def get_probabilities(X_test):
+
+    return model.predict_proba(X_test)[:, 1]
+
+
+def roc_curve(probabilities, labels):
+    '''
+    INPUT: numpy array, numpy array
+    OUTPUT: list, list, list
+
+    Take a numpy array of the predicted probabilities and a numpy array of the
+    true labels.
+    Return the True Positive Rates, False Positive Rates and Thresholds for the
+    ROC curve.
+    '''
+
+    thresholds = np.sort(probabilities)
+
+    tprs = []
+    fprs = []
+
+    num_positive_cases = sum(labels)
+    num_negative_cases = len(labels) - num_positive_cases
+
+    for threshold in thresholds:
+        # With this threshold, give the prediction of each instance
+        predicted_positive = probabilities >= threshold
+        # Calculate the number of correctly predicted positive cases
+        true_positives = np.sum(predicted_positive * labels)
+        # Calculate the number of incorrectly predicted positive cases
+        false_positives = np.sum(predicted_positive) - true_positives
+        # Calculate the True Positive Rate
+        tpr = true_positives / float(num_positive_cases)
+        # Calculate the False Positive Rate
+        fpr = false_positives / float(num_negative_cases)
+
+        fprs.append(fpr)
+        tprs.append(tpr)
+
+    return tprs, fprs, thresholds.tolist()
+
+
+def plot_roc(X_test, y_test):
+
+    tpr, fpr, thresholds = roc_curve(get_probabilities(X_test), y_test)
+    plt.plot(fpr, tpr)
+    plt.xlabel("False Positive Rate (1 - Specificity)")
+    plt.ylabel("True Positive Rate (Sensitivity, Recall)")
+    plt.title("ROC plot of admissions data")
+    plt.show()
+
+if __name__ == "__main__"
+    run_ticket_types(df)
+    X_train, X_test, y_train, y_test = train_test_split(X, y)
