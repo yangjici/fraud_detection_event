@@ -14,18 +14,18 @@ The web app had to deal with two separate thread - one to run the web server and
 
 We have a number of data cleaning steps to select a subset of colums.  This included imputing data, type conversions, and adding some new columns
 
-###Final Model Predictor Variables:
-      1. gts
-      2. Event has organization description (engineered)
-      3. Where the event has organization name (engineered)
-      4. Whether the event has listed the address (engineered)
-      5. user age
-      6. user type
-      7. max ticket price
-      8. min ticket price
-      9. Total number of tickets the event are selling (engineered)
-      10. payout_type
-      11. number of previous payouts
+### Final Model Predictor Variables:
+1. gts
+2. Event has organization description (engineered)
+3. Where the event has organization name (engineered)
+4. Whether the event has listed the address (engineered)
+5. user age
+6. user type
+7. max ticket price
+8. min ticket price
+9. Total number of tickets the event are selling (engineered)
+10. payout_type
+11. number of previous payouts
 
 ## assessment metrics selected
 
