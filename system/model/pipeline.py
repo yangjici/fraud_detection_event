@@ -10,7 +10,7 @@ class Pipeline(object):
     def __init__(self, filepath):
         self.filepath = filepath
 
-    def get_matrix_target(self):
+    def get_X_y(self):
         df = pd.read_json(self.filepath)
         bool_mask = (df['acct_type'] == 'premium') | (df['acct_type'].apply(lambda x: re.match('fraud', x)))
         df = df[bool_mask]
@@ -23,7 +23,7 @@ class Pipeline(object):
         y = df.fraud.values
         return X, y
 
-    def get_model(self, X, y):
+    def train(self, X, y):
         return Model().fit(X, y)
 
     def save_model(self, model, filepath):
