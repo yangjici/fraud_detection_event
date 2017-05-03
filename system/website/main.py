@@ -1,8 +1,12 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 import requests
-
+from pymongo import MongoClient
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+client = MongoClient()
+records = client['fraud']['records']
 
 @app.route("/")
 def home():
@@ -11,6 +15,17 @@ def home():
 @app.route("/dashboard")
 def dashboard():
     return render_template('dashboard.html')
+
+@app.route('/getall')
+def getall():
+    o = []
+    rs = records.find().sort([('_id', 1)]).limit(3)
+    for r in rs:
+        j = {}
+        j['venue'] = r['venue_name']
+        j['prediction'] = r['prediction']
+        o.append(j)
+    return jsonify(o)
 
 if __name__ == "__main__":
     print 'a'

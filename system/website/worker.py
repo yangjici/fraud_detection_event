@@ -5,7 +5,6 @@ import cPickle as pickle
 import pandas as pd
 import random
 
-
 client = MongoClient()
 collection = client['fraud']['records']
 
