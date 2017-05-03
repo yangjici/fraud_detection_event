@@ -1,10 +1,12 @@
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
+import datetime
 from data_cleaning import *
 
 
-df = pd.read_json('data.json')
+df = pd.read_json('data/data.json')
 
 fraud_flags = ['fraudster_event', 'fraudster', 'fraudster_att']
 
@@ -13,21 +15,18 @@ df['Fraud'] = df['acct_type'].map(lambda x: 1 if x in fraud_flags else 0) # crea
 
 df.drop('acct_type', axis = 1, inplace=True) # Remove 'acct_type' column to avoid leakage
 
-categorical_features = ['currency', 'listed', 'payout_type']
-
-features_to_engineer = ['country', 'description', 'email_domain', 'name', 'org_desc', 'org_name', 'payee_name', 'previous_payouts', 'ticket_types', 'venue_address', 'venue_name', 'venue_country' ,'venue_state']
 
 '''
 Feature Engineering
 '''
 ######
 # previous_payouts
-
+#
 def make_time(t):
     return datetime.datetime.strptime(t, "%Y-%m-%d %H:%M:%S")
 
 def payout_info(row):
-    no_payout=np.array([0,None]).reshape(1,2)
+    no_payout=np.array([0,0]).reshape(1,2)
     if (row!=[]):
         if 'created' in row[0]:
             time_list =list(set([pay['created'] for pay in row]))
@@ -48,9 +47,35 @@ for i in df.previous_payouts:
 
 payout_features = pd.DataFrame(payout_features[1:,],columns=['number_payout','median_day_interval'])
 
-df_price_payout = pd.concat([df_price,payout_features],axis=1)
+df = pd.concat([df,payout_features],axis=1)
 
 ############
+def make_price(row):
+    s2=np.array([0,0,0]).reshape(1,3)
+    if (row!= []):
+        if ('cost' in row[0]):
+            prices=[int(tic['cost']) for tic in row]
+            s1 = np.array([len(row),min(prices),max(prices)]).reshape(1,3)
+            return s1
+    else:
+        return s2
+
+price_features = np.array([0,0,0]).reshape(1,3)
+
+for i in df.ticket_types:
+    price = make_price(i)
+    price_features = np.append(price_features,price,axis=0)
+
+
+price_features = pd.DataFrame(price_features[1:,],columns=['number_tickets','min_price','max_price'])
+
+df = pd.concat([df,price_features],axis=1)
+
+############
+
+categorical_features = ['currency', 'listed', 'payout_type']
+
+features_to_engineer = ['country', 'description', 'email_domain', 'name', 'org_desc', 'org_name', 'payee_name', 'previous_payouts', 'ticket_types', 'venue_address', 'venue_name', 'venue_country' ,'venue_state', 'sale_duration2', 'sale_duration','number_payout']
 
 for feature in categorical_features:
     df = dummify(df,feature)
@@ -80,9 +105,23 @@ rf = RandomForestClassifier()
 rf = rf.fit(X_train_CV, y_train_CV)
 
 # Making predictions
-predictions_rf = rf.predict(X_test_CV)
-accuracy_rf = sum(predictions==y_test_CV)/float(len(y_test_CV))
-precision_rf = sum((predictions==1) & (predictions==y_test_CV)) /float(sum(predictions==1))
-recall = sum((predictions==1) & (predictions==y_test_CV))/float(sum(y_test_CV==1))
 
-print 'Random Forests results: ' accuracy, precision, recall
+predictions_rf = rf.predict(X_test_CV)
+accuracy_rf = sum(predictions_rf==y_test_CV)/float(len(y_test_CV))
+precision_rf = sum((predictions_rf==1) & (predictions_rf==y_test_CV)) /float(sum(predictions_rf==1))
+recall_rf = sum((predictions_rf==1) & (predictions_rf==y_test_CV))/float(sum(y_test_CV==1))
+
+print 'Random Forests results: ', accuracy_rf, precision_rf, recall_rf
+
+# Fitting Adaboost model into our cross-validated data
+ada = AdaBoostClassifier()
+ada = ada.fit(X_train_CV, y_train_CV)
+
+# Making predictions
+
+predictions_ada = ada.predict(X_test_CV)
+accuracy_ada = sum(predictions_ada==y_test_CV)/float(len(y_test_CV))
+precision_ada = sum((predictions_ada==1) & (predictions_ada==y_test_CV)) /float(sum(predictions_ada==1))
+recall_ada = sum((predictions_ada==1) & (predictions_ada==y_test_CV))/float(sum(y_test_CV==1))
+
+print 'Adaboost results: ', accuracy_ada, precision_ada, recall_ada
