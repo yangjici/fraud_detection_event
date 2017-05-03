@@ -8,18 +8,10 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score
 from sklearn.model_selection import GridSearchCV
 import matplotlib.pyplot as plt
 
-
-model = LogisticRegression()
-
-def init():
-    try:
-        df
-    except NameError:
-        df = u.get_df(path='../data/data.json')
-
 # Run basic logistic regression
-def run_model(model, X_train, X_test, y_train, y_test):
+def run_model():
 
+    print X_train.shape
     model.fit(X_train, y_train)
     y_predict = model.predict(X_test)
 
@@ -29,7 +21,7 @@ def run_model(model, X_train, X_test, y_train, y_test):
 
     return accuracy, precision, recall
 
-
+# Cross Validate linear regression
 def run_model_cv(model, X_train, X_test, y_train, y_test):
 
     kfold = KFold(n_splits=5)
@@ -66,13 +58,15 @@ def run_ticket_types(in_df):
     X = tix_df
     X_train, X_test, y_train, y_test = train_test_split(X, y)
 
-    a, p, r = run_model(model, X_train, X_test, y_train, y_test)
+    #a, p, r = run_model(model, X_train, X_test, y_train, y_test)
+    a, p, r = run_model()
     print a, p, r
 
 
 def do_GridSearch(X_train,y_train):
-    Cs = np.logspace(-4, 4, 30)
-    params = {'C': Cs}
+    params = {
+        'C': np.logspace(-4, 4, 30)
+    }
     gs_model = GridSearchCV(model,params,n_jobs=-1)
     gs_model.fit(X_train,y_train)
 
@@ -128,6 +122,17 @@ def plot_roc(X_test, y_test):
     plt.title("ROC plot of admissions data")
     plt.show()
 
-if __name__ == "__main__"
-    run_ticket_types(df)
-    X_train, X_test, y_train, y_test = train_test_split(X, y)
+if __name__ == "__main__":
+
+    df = u.get_df(path='../data/data.json')
+    y = df.pop('fraud')
+    X = df
+    X_nums = u.get_numeric_cols(df)
+    X_nums = u.impute_median(X_nums, X_nums.columns)
+    #
+    # df['fraud'] = [1 if x in ['fraudster', 'fraudster_event', 'fraud_att'] else 0 for x in df.acct_type]
+    #
+    model = LogisticRegression()
+    X_train, X_test, y_train, y_test = train_test_split(X_nums, y)
+    print df.shape
+    # run_ticket_types(df)

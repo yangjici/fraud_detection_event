@@ -8,9 +8,33 @@ import numpy as np
 keep = ['acct_type','channels','description','gts','name','num_payouts','ticket_types','user_age','user_type']
 org_payee = ['org_name','org_name','payee_name','payout_type','previous_payouts']
 
+df = None
 
-def get_df(path='data/data.json'):
+def get_df(path='data/data.json', refresh=False):
+    #if df is None or refresh == True:
+    # df = pd.read_json(path)
     df = pd.read_json(path)
+    df['fraud'] = [1 if x in ['fraudster', 'fraudster_event', 'fraud_att'] else 0 for x in df.acct_type]
+
+    return df
+
+
+def get_numeric_cols(in_df):
+    df = in_df.copy()
+    return df.select_dtypes(include=['int','float'])
+
+
+def impute_median(df, cols):
+    '''
+        Given a dataframe, find all the numeric types and impute the median values
+        for any rows which are nan.
+
+        return DataFrame -- the dataframe with all the nan values set to the imputed median
+    '''
+    for cname in cols:
+        med_val = np.median(df[cname][~np.isnan(df[cname])])
+        df[cname][np.isnan(df[cname])] = med_val
+
     return df
 
 
@@ -52,6 +76,11 @@ def make_fraud_labels(df):
 
 
 def get_ticket_types_df(in_df):
+    '''
+    The fraud data set ticket_type field is a dictionary
+    This is flattened into a new dataframe, each dict item as a row
+    The fraud value for the dictionary is assigned to each row
+    '''
     dfc = in_df.copy()
     tix = dfc.ticket_types
 
