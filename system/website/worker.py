@@ -26,7 +26,9 @@ def pull_loop():
     current_object = 0
     while True:
         json = getjson()
-        if json["object_id"] != current_object:
+        cur_obj_id = json["object_id"]
+        if collection.find( { "object_id" : cur_obj_id } ).count() == 0:
+        #if json["object_id"] != current_object:
             prediction, probability = predict(model, json)
             print "prediction {}, probability: {}".format(prediction,probability)
             json["prediction"] = prediction
@@ -36,7 +38,7 @@ def pull_loop():
             current_object = json["object_id"]
         else:
             print "duplicate"
-        time.sleep(0.1)
+        time.sleep(2)
 
 def load_model():
     '''Loads pickle file as model
