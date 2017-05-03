@@ -23,7 +23,7 @@ class Pipeline(object):
         y = df.fraud.values
         return X, y
 
-    def get_model(self, X, y):
+    def train(self, X, y):
         return Model().fit(X, y)
 
     def save_model(self, model, filepath):
