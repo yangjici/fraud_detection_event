@@ -11,7 +11,9 @@ class App extends Component {
   }
 
   componentDidMount(){
+    setInterval(() => {
       this.getall();
+    }, 500);
   }
 
   getall(){
@@ -33,7 +35,9 @@ class App extends Component {
           <table className="table table-striped">
               <thead>
                   <tr>
+                      <th>Name</th>
                       <th>Venue</th>
+                      <th>State</th>
                       <th>Prediction</th>
                       <th>Probability</th>
                   </tr>
@@ -43,9 +47,11 @@ class App extends Component {
                     this.state.records.map((r, i) => {
                         return (
                             <tr key={i}>
+                                <td>{r.name}</td>
                                 <td>{r.venue}</td>
+                                <td>{r.state}</td>
                                 <td>{r.prediction}</td>
-                                <td>0.3%</td>
+                                <td>{r.probability.toFixed(3)}</td>
                             </tr>
                         );
                     })

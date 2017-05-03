@@ -1,0 +1,63 @@
+{% extends "master.html" %}
+
+{% block body %}
+
+    <a href="/"><h4 align="left">Home</h3></a>
+  <a href="/dashboard"><h4 align="left">Dashboard</h3></a>
+
+    <h2 align = "center">
+      Fraud Detection Case Study - Group 3
+    </h2>
+
+      <h3>Process Flow</h3>
+
+      <h5>Model Development:</h5>
+      <body>
+      After some initial time in EDA, we split model development evenly amongst the team.
+      This included identifying relationships between columns, small data engineering tasks, and hunches regarding potential relevancy.
+      Each team member took a stab at building a different model; a Random Forrest Classifier gave us the best results and also fit our training/prediction tradeoff parameters.
+
+    </body>
+    <h5>Web App Development:</h5>
+       Architecting the web app involved two separate threads - one to run the web server and one to ping for new data points and predict. Rather than create a threading system, we opted to run each in its own python environment.
+       We then built the flask front end with javascript additions and set up the MongoDB predict processes.
+    </body>
+
+          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/CRISP-DM_Process_Diagram.png" alt="CrispDM" style="height:350px;" ALIGN="right"/>
+
+      <h3>Preprocessing</h3>
+      <body>
+      Data cleaning steps to select a subset of columns, including:<br>
+       - imputing data<br>
+       - type conversions<br>
+       - adding new features<br>
+     </body>
+      <h3>Assessment of Model</h3>
+      <body>
+      - Accuracy<br>
+      - Precision<br>
+      - Recall
+    </body>
+      <h3>Validation and Testing</h3>
+      <body>
+      "The Standards":<br>
+       - mailtodel.fit<br>
+       - model.predict<br>
+       - model.predict_proba<br>
+       - Parameter tuning using GridSearchCV
+
+      <h3>Future Steps</h3>
+      <body>
+       - Creating an ensemble of models<br>
+       - Adding user functionality to the dashboard<br>
+       - Creating aggregate data summary
+      </body>
+<br>
+<br>
+<br>
+
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}
