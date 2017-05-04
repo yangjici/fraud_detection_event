@@ -17,12 +17,12 @@ class App extends Component {
   }
 
   getall(){
-    fetch('http://localhost:3333/getall')
+    fetch('http://52.53.197.242:3333/getall')
     .then((response) => {
       return response.json()
     }).then((json) => {
         this.setState({records: json})
-        console.log('parsed json', json);
+        console.log('parsed json', json[0].name);
     }).catch((ex) => {
       console.log('parsing failed', ex);
     })

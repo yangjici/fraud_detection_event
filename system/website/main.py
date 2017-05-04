@@ -36,4 +36,5 @@ def getall():
 
 if __name__ == "__main__":
     print 'a'
-    app.run(host='0.0.0.0', port=3333, debug = True)
+    app.run(host='0.0.0.0', port=3333)
+

@@ -3,7 +3,7 @@
 {% block body %}
 
     <a href="/"><h4 align="left">Home</h3></a>
-  <a href="/dashboard"><h4 align="left">Dashboard</h3></a>
+  <a href="http://52.53.197.242:3000/"><h4 align="left">Dashboard</h3></a>
 
     <h2 align = "center">
       Fraud Detection Case Study - Group 3
@@ -11,19 +11,47 @@
 
       <h3>Process Flow</h3>
 
-      <h5>Model Development:</h5>
+      <h4>Model Development:</h4>
       <body>
       After some initial time in EDA, we split model development evenly amongst the team.
-      This included identifying relationships between columns, small data engineering tasks, and hunches regarding potential relevancy.
-      Each team member took a stab at building a different model; a Random Forrest Classifier gave us the best results and also fit our training/prediction tradeoff parameters.
-
+      This included identifying relationships between columns, initial data engineering tasks, and hunches regarding potential relevancy.<br>
+      Each team member took a stab at building a different model. A random forest classifier with class weight balanced, min sample each split of 10, and 1000 trees gave us the best results and also fit our training/prediction tradeoff parameters.<br>
     </body>
-    <h5>Web App Development:</h5>
+              <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/CRISP-DM_Process_Diagram.png" alt="CrispDM" style="height:350px;" ALIGN="right"/>
+      <h5>Final Model Predictor Variables:</h6><br>
+      <body>
+      1. gts<br>
+      2. Event has organization description (engineered)<br>
+      3. Where the event has organization name (engineered)<br>
+      4. Whether the event has listed the address (engineered)<br>
+      5. user age<br>
+      6. user type<br>
+      7. max ticket price<br>
+      8. min ticket price<br>
+      9. Total number of tickets the event are selling (engineered)<br>
+      10. payout_type<br>
+      11. number of previous payouts<br>
+    </body>
+      <img src="/img/figure_1.png" alt="Feature Importance Graph" style="height:350px;" ALIGN="right"/>
+      <h5>Promising features with strong signals left out of the model due to concerns of leakage:</h5><br>
+      <body>
+
+      1. Sale duration 1,2 - Event with shorter duration could be a result of it being fraud or it become terminated before ending<br>
+      2. num_order - The number of order maybe less due to event being caught being fraud or customer’s innate fraud detection “algorithm” (common sense?)<br>
+      3. num of payouts for current event - Either fraudster are eager to without quickly or the event being terminated without having the chance to do payout<br>
+      <br>
+      *With the need to detect fraud live as soon as event is published, these data may not be obtainable in the future with live fraud detection, or maybe systematically influenced by event being detected as fraud.<br>
+    </body>
+    <h5>Model Performance</h5>
+    <body>
+      Accuracy: 0.98<br>
+      Precision: 0.94<br>
+      Recall: 0.9 <br>
+    </body>
+    <h4>Web App Development:</h4>
        Architecting the web app involved two separate threads - one to run the web server and one to ping for new data points and predict. Rather than create a threading system, we opted to run each in its own python environment.
        We then built the flask front end with javascript additions and set up the MongoDB predict processes.
     </body>
-
-          <img src="https://upload.wikimedia.org/wikipedia/commons/b/b9/CRISP-DM_Process_Diagram.png" alt="CrispDM" style="height:350px;" ALIGN="right"/>
 
       <h3>Preprocessing</h3>
       <body>
@@ -50,7 +78,7 @@
       <body>
        - Creating an ensemble of models<br>
        - Adding user functionality to the dashboard<br>
-       - Creating aggregate data summary
+       - Creating aggregate data summaries and graphics<br>
       </body>
 <br>
 <br>
@@ -61,3 +89,7 @@
 
 {% block scripts %}
 {% endblock %}
+
+
+
+
